@@ -7,33 +7,35 @@ module.exports = {
   options: {
     nodeAssets: {
       'framework7': function() {
-          return {
-            srcDir: 'dist',
-            import: [
-              'js/framework7.js',
-              'js/framework7.js.map',
-              ...this.themeFiles
-            ]
-          };
+        return {
+          srcDir: 'dist',
+          import: [
+            'js/framework7.js',
+            'js/framework7.js.map',
+            ...this.themeFiles
+          ]
+        };
       }
     }
   },
 
   included: function(app) {
+    this.themeFiles = []
+    if(app.options && app.options['ember-cli-framework7']){
+      // import fix for Ember view height
+      app.import('vendor/css/ember-cli-framework7.css');
 
-    // import fix for Ember view height
-    app.import('vendor/css/ember-cli-framework7.css');
+      // default to iOS theme
+      let theme = 'ios';
 
-    // default to iOS theme
-    let theme = 'ios';
+      // if theme was configured in f7 options, use it
+      if (app.options['ember-cli-framework7'].theme) {
+        theme = app.options['ember-cli-framework7'].theme;
+      }
 
-    // if theme was configured in f7 options, use it
-    if (app.options && app.options['ember-cli-framework7'] && app.options['ember-cli-framework7'].theme) {
-      theme = app.options['ember-cli-framework7'].theme;
+      // set theme files to import
+      this.themeFiles = [`css/framework7.${theme}.css`, `css/framework7.${theme}.colors.css`];
     }
-
-    // set theme files to import
-    this.themeFiles = [`css/framework7.${theme}.css`, `css/framework7.${theme}.colors.css`];
 
     this._super.included.apply(this, arguments);
   }

@@ -10,6 +10,6 @@ module.exports = {
   // }
 
   afterInstall: function(options) {
-    return this.addBowerPackageToProject('framework7');
+    return this.addBowerPackageToProject('framework7', '~1');
   }
 };
